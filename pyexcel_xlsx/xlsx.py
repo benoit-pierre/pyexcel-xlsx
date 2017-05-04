@@ -101,7 +101,7 @@ class XLSXBook(BookReader):
 
     def read_sheet(self, native_sheet):
         sheet = XLSXSheet(native_sheet, **self._keywords)
-        return {sheet.name: sheet.to_array()}
+        return {sheet.name: list(sheet.to_array())}
 
     def _load_the_excel_file(self, file_alike_object):
         self._native_book = openpyxl.load_workbook(
@@ -110,6 +110,10 @@ class XLSXBook(BookReader):
     def _get_params(self):
         self.skip_hidden_sheets = self._keywords.get(
             'skip_hidden_sheets', True)
+
+    def close(self):
+        self._native_book.close()
+        self._native_book = None
 
 
 class XLSXSheetWriter(SheetWriter):
